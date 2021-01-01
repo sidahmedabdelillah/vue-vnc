@@ -1,7 +1,10 @@
 <template>
   <div>
-    <button @click="connect">conecter</button>
-    <input v-model="ip" />
+    <v-row>
+      <v-spacer></v-spacer>
+
+      <v-btn v-if="disp" @click="connect" class="mt-16">conn</v-btn>
+    </v-row>
     <div id="view"></div>
   </div>
 </template>
@@ -12,10 +15,10 @@ import RFB from '@novnc/novnc/core/rfb';
 export default {
   data() {
     return {
-      ip: '',
       rfb: null,
-      url: 'ws://192.168.1.21:9999/tightvnc',
-      passwd: '12345678',
+      url: this.$route.params.url,
+      passwd: this.$route.params.passwd,
+      disp: true,
     };
   },
 
@@ -23,12 +26,8 @@ export default {
     connect() {
       console.log(this.url);
       console.log(this.passwd);
-      const tmp = `ws://${this.ip}:9999/tightvnc`;
-      this.url = tmp;
       this.rfb.sendCredentials({ password: this.passwd });
-    },
-    back() {
-      this.$router.push({ name: 'vnc' });
+      this.disp = false;
     },
     disconnect() {
       this.rfb.disconnect();
